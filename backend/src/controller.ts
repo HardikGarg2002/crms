@@ -36,7 +36,7 @@ export default class CandidateController {
       const candidate = new Candidate({ name:name.trim(), email:email.trim(), phone, jobTitle:jobTitle.trim(), resumeUrl });
       await candidate.save();
       console.log('new candidate created');
-      res.status(201).json(candidate);
+      res.status(201).json({candidate,message:'New candidate Referral added'});
     } catch (err) {
       res.status(400).json({ error: (err as Error).message });
     }
@@ -65,7 +65,7 @@ export default class CandidateController {
     try {
       const { status } = req.body;
       if (!validateCandidateStatus(status?.toUpperCase().trim())) {
-        throw new Error('Invalid Status Valid values are: Pending, Reviewed, Hired' );
+        throw new Error('Invalid Status. Only Valid values are: Pending, Reviewed, Hired' );
       }
      
       const candidate = await Candidate.findByIdAndUpdate(req.params.id, { status:status.toUpperCase().trim() }, { new: true });
