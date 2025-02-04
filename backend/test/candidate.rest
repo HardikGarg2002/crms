@@ -1,0 +1,59 @@
+
+@url= http://localhost:6002/api/candidates
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTA4MjdkZGRkM2Q5MjdiMzkwOTEwY2QiLCJpYXQiOjE3MDQ3ODU0MzgsImV4cCI6MTcwODM1MTgzOH0.sActscFHbfGnsI1QyehxdC42kLE5g0EbFCkq_jy-PaY
+@id=67a148daa5b92b6b68e16320
+###
+GET {{url}}
+
+###
+GET {{url}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+###
+GET {{url}}/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+###
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{   
+    "name":" Hardik Garg  ",
+    "email":"hardik4@gmail",
+    "phone":"+91 9215503085",
+    "jobTitle":"Software Developer"
+
+}
+# can either use 9215503085 or +91 9215503085
+# +49 30 12345678
+
+###
+PATCH {{url}}/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "",
+    "reason": "test reason"
+}
+###
+PATCH {{url}}/{{id}}/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "status":   "hIreD" ,
+    "reason":"i wantss to update status"
+}
+
+###
+DELETE {{url}}/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+

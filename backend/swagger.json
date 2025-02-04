@@ -1,0 +1,354 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Candidate Referral Management System",
+        "version": "1.0.0",
+        "description": "API for managing candidate referrals, updating their status, and sending emails."
+    },
+    "servers": [
+        {
+            "url": "https://productsbackend-dev-itpl.up.railway.app/api",
+            "description": "CRMS Server URL"
+        },
+        {
+            "url": "http://localhost:6002/api",
+            "description": "CRMS Localhost"
+        }
+    ],
+    "paths": {
+        "/candidates": {
+            "post": {
+                "summary": "Add a new candidate",
+                "description": "Adds a new candidate to the system. Optionally, a resume can be uploaded.",
+                "operationId": "addCandidate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+4915112345678"
+                                    },
+                                    "jobTitle": {
+                                        "type": "string",
+                                        "example": "Software Engineer"
+                                    },
+                                    "resume": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "Resume file (PDF only)"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "phone",
+                                    "jobTitle"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Candidate added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Candidate"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid email format"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Fetch all candidates",
+                "description": "Returns a list of all candidates in the system.",
+                "operationId": "getCandidates",
+                "responses": {
+                    "200": {
+                        "description": "List of candidates",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Candidate"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to fetch candidates"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/candidates/{id}/status": {
+            "patch": {
+                "summary": "Update candidate status",
+                "description": "Updates the status of a candidate and sends an email if the status is updated to 'HIRED'.",
+                "operationId": "updateStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the candidate to update",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Pending",
+                                            "Reviewed",
+                                            "Hired"
+                                        ],
+                                        "description": "New status of the candidate. Must be one of: Pending, Reviewed, Hired."
+                                    }
+                                },
+                                "required": [
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Candidate status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "candidate": {
+                                            "$ref": "#/components/schemas/Candidate"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Candidate status updated successfully"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request or validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Invalid Status. Valid values are: Pending, Reviewed, Hired"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Candidate not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Candidate does not exist with this id"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error or email sending failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "candidate": {
+                                            "$ref": "#/components/schemas/Candidate"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Candidate status updated to Hired, but failed to send email"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/candidates/{id}": {
+            "delete": {
+                "summary": "Delete a candidate",
+                "description": "Deletes a candidate from the system.",
+                "operationId": "deleteCandidate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the candidate to delete",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Candidate deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Candidate deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Candidate not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Candidate not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Failed to delete candidate"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Candidate": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "65a1b2c3d4e5f6a7b8c9d0e1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "john.doe@example.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+4915112345678"
+                    },
+                    "jobTitle": {
+                        "type": "string",
+                        "example": "Software Engineer"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "Pending",
+                            "Reviewed",
+                            "Hired"
+                        ],
+                        "example": "Hired"
+                    },
+                    "resumeUrl": {
+                        "type": "string",
+                        "example": "uploads/resume.pdf"
+                    }
+                }
+            }
+        }
+    }
+}

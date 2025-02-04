@@ -1,0 +1,45 @@
+{
+  "name": "candidate_referal_management_system",
+  "version": "1.0.0",
+  "description": "application to manage referals of candidate at a organization",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
+    "dev": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "mongodb",
+    "candidate",
+    "referal"
+  ],
+  "author": "Hardik Garg",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.13.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/swagger-ui-express": "^4.1.7",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@hardikgarg2002/node-errorify": "^1.0.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-async-errors": "^3.1.1",
+    "libphonenumber-js": "^1.11.19",
+    "mongoose": "^8.9.6",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
+    "swagger-ui-express": "^5.0.1",
+    "youch": "^3.3.4"
+  }
+}
