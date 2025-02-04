@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://productsbackend-dev-itpl.up.railway.app/api",
+            "url": "https://crms-wbio.onrender.com/api",
             "description": "CRMS Server URL"
         },
         {
