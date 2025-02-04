@@ -35,6 +35,7 @@ This project is a **Candidate Referral Management System** that allows users to 
   - `DELETE /candidates/:id`: Delete a candidate.
 - **Email Notification**: Send an email to the candidate when their status is updated to "Hired".
 - **Validation**: Validate email, phone number, and resume file format.
+- **API docs(Swagger)** : Api docs are present on this url https://crms-wbio.onrender.com/api-docs/
 
 ---
 
