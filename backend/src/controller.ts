@@ -26,12 +26,7 @@ export default class CandidateController {
       if (!validateJobTitle(jobTitle)) {
         throw new Error( 'Invalid job title format' );
       }
-
-      // Validate resume file (if uploaded)
-      if (req.file && req.file.mimetype !== 'application/pdf') {
-        throw new Error('Only PDF files are allowed' );
-      }
-
+     
       const candidate = new Candidate({ name:name.trim(), email:email.trim(), phone, jobTitle:jobTitle.trim(), resumeUrl });
       await candidate.save();
       console.log('new candidate created');
