@@ -40,8 +40,9 @@ export default function CandidateCard({ candidate, updateStatus }: CandidateCard
             {candidate.phone}
           </p>
         </div>
-        <Button variant="outline" > <a href={candidate.resumeUrl} download={candidate.name+'_resume'}>View Resume</a></Button>
-       
+        {candidate.resumeUrl &&
+          <Button variant="outline" > <a href={candidate.resumeUrl} download={candidate.name+'_resume'}>View Resume</a></Button>
+        }
         </div>
       </div>
       <div className="px-5 py-3 bg-gray-50 border-t border-gray-200">

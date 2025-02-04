@@ -26,8 +26,7 @@ export default function ReferralForm({ onSubmit }: ReferralFormProps) {
   }
 
   const uploadToCloudinary = async () => {
-    if (!resumeFile) return
-    console.log('uploading to cloudinary');
+    if (!resumeFile) return null;
     setUploading(true)
     const formData = new FormData()
     formData.append("file", resumeFile)
@@ -39,23 +38,28 @@ export default function ReferralForm({ onSubmit }: ReferralFormProps) {
         body: formData,
       })
       const data = await response.json()
-      console.log('response from cloudinary',data)
-      setFormData((prev) => ({ ...prev, resumeUrl: data.secure_url }))
+      return data.secure_url;
     } catch (error) {
       console.error("Upload failed", error)
-    } finally {
-      setUploading(false)
+    } finally{
+      setUploading(false);
     }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    let resumeUrl = formData.resumeUrl;
     if (!formData.resumeUrl) {
-      await uploadToCloudinary() // Ensure upload completes before submission
+      resumeUrl = await uploadToCloudinary() // Ensure upload completes before submission
     }
-    onSubmit(formData) // Send to backend
-    setFormData({ name: "", email: "", phone: "", jobTitle: "", resumeUrl: "" })
-    setResumeFile(null)
+    if (resumeUrl) {
+      const updatedFormData = { ...formData, resumeUrl };
+      onSubmit(updatedFormData);
+      setFormData({ name: "", email: "", phone: "", jobTitle: "", resumeUrl: "" });
+      setResumeFile(null);
+    } else {
+      console.error("Resume upload failed.");
+    }
   }
 
   return (
