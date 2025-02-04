@@ -1,9 +1,9 @@
 import { useState } from "react"
-import type { Candidate } from "./Dashboard"
+// import type { Candidate } from "./Dashboard"
 import { User, Mail, Phone, Briefcase, FileText } from "lucide-react"
 
 interface ReferralFormProps {
-  onSubmit: (candidate: Omit<Candidate, "id" | "status">) => void
+  onSubmit: (candidate: any) => void
 }
 
 export default function ReferralForm({ onSubmit }: ReferralFormProps) {
