@@ -1,6 +1,6 @@
 import type { Candidate } from "./Dashboard"
 import { User, Briefcase, Phone, Mail } from "lucide-react"
-
+import { Button } from "./ui/button"
 interface CandidateCardProps {
   candidate: Candidate
   updateStatus: (id: string, newStatus: Candidate["status"]) => void
@@ -25,6 +25,7 @@ export default function CandidateCard({ candidate, updateStatus }: CandidateCard
             {candidate.status}
           </span>
         </div>
+        <div className="flex items-center justify-between">
         <div className="space-y-2 text-sm text-gray-600">
           <p className="flex items-center">
             <Briefcase className="mr-2" size={16} />
@@ -38,6 +39,9 @@ export default function CandidateCard({ candidate, updateStatus }: CandidateCard
             <Phone className="mr-2" size={16} />
             {candidate.phone}
           </p>
+        </div>
+        <Button variant="outline" > <a href={candidate.resumeUrl} download={candidate.name+'_resume'}>View Resume</a></Button>
+       
         </div>
       </div>
       <div className="px-5 py-3 bg-gray-50 border-t border-gray-200">

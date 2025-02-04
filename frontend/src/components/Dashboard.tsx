@@ -11,6 +11,7 @@ export interface Candidate {
   status: "PENDING" | "REVIEWED" | "HIRED"
   email: string
   phone: string
+  resumeUrl?:string
 }
 
 export default function Dashboard() {
@@ -39,7 +40,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleNewReferral = async (newCandidate: Omit<Candidate, "id" | "status">) => {
+  const handleNewReferral = async (newCandidate: Omit<Candidate, "_id" | "status">) => {
     try {
       const response = await fetch("https://crms-wbio.onrender.com/api/candidates", {
         method: "POST",
