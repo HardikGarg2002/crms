@@ -26,7 +26,7 @@ export default function Dashboard() {
     setIsLoading(true);
     try {
       // Make an API call to the local server
-      const response = await fetch("http://localhost:6002/api/candidates");
+      const response = await fetch("https://crms-wbio.onrender.com/api/candidates");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -43,7 +43,7 @@ export default function Dashboard() {
 
     try {
       // Send the new candidate data to the backend
-      const response = await fetch("http://localhost:6002/api/candidates", {
+      const response = await fetch("https://crms-wbio.onrender.com/api/candidates", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ export default function Dashboard() {
   // Update candidate status via API
   const updateCandidateStatus = async (id: string, newStatus: Candidate["status"]) => {
     try {
-      const response = await fetch(`http://localhost:6002/api/candidates/${id}/status`, {
+      const response = await fetch(`https://crms-wbio.onrender.com/api/candidates/${id}/status`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
