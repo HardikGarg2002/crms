@@ -40,9 +40,7 @@ export default function Dashboard() {
   };
 
   const handleNewReferral = async (newCandidate: Omit<Candidate, "id" | "status">) => {
-
     try {
-      // Send the new candidate data to the backend
       const response = await fetch("https://crms-wbio.onrender.com/api/candidates", {
         method: "POST",
         headers: {
@@ -50,26 +48,44 @@ export default function Dashboard() {
         },
         body: JSON.stringify(newCandidate),
       });
-
+  
       if (!response.ok) {
+        let errorMessage = "Operation failed.";
+        
+        try {
+          const errorResponse = await response.json();
+          errorMessage = errorResponse?.message || JSON.stringify(errorResponse);
+        } catch (jsonError) {
+          console.error("Error parsing response JSON:", jsonError);
+        }
+  
         toast({
-          variant:'destructive',
+          variant: "destructive",
           title: "Failure",
-          description: "operation failed.",
-        }); 
-        throw new Error("Failed to add candidate");
+          description: errorMessage,
+        });
+  
+        throw new Error(errorMessage);
       }
-
-      const addedCandidate = await response.json();
+  
+      const { candidate: addedCandidate, message } = await response.json();
       setCandidates([...candidates, addedCandidate]);
+  
       toast({
         title: "Success",
-        description: "Candidate added successfuly.",
-      }); 
+        description: message,
+      });
     } catch (error) {
       console.error("Error adding candidate:", error);
+  
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
+      });
     }
   };
+  
 
   // Update candidate status via API
   const updateCandidateStatus = async (id: string, newStatus: Candidate["status"]) => {
