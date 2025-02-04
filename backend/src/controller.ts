@@ -7,7 +7,7 @@ import { sendMail } from './utils/email';
 export default class CandidateController {
   async create(req: Request, res: Response) {
     try {
-      const { name, email, phone, jobTitle } = req.body;
+      const { name, email, phone, jobTitle,resumeUrl } = req.body;
       if (!validatePhoneNumber(phone)) {
         throw new Error('Invalid phone number');
       }
@@ -31,7 +31,6 @@ export default class CandidateController {
       if (req.file && req.file.mimetype !== 'application/pdf') {
         throw new Error('Only PDF files are allowed' );
       }
-      const resumeUrl = req.file ? req.file.path : null;
 
       const candidate = new Candidate({ name:name.trim(), email:email.trim(), phone, jobTitle:jobTitle.trim(), resumeUrl });
       await candidate.save();
